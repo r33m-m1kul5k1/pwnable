@@ -1,0 +1,163 @@
+{
+  "main": {
+    "id": "0f62563cce1fb1e9",
+    "type": "split",
+    "children": [
+      {
+        "id": "445004c23b5f7726",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2bce5b7ce2922301",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "tiny.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5de26867ee8b7861",
+    "type": "split",
+    "children": [
+      {
+        "id": "412fbf81f808137f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "cc4d8b3ad6291f1b",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "2a0a7035345c883d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4c28bc364a458dd5",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "0c233113314a76dd",
+    "type": "split",
+    "children": [
+      {
+        "id": "e9cd5622644eb1ae",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7b5819b7a8e9d181",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "tiny.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "6b5f1642616a50bf",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "tiny.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "002efbcf0d4040fd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "a61bbd256fc4b281",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "tiny.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "2bce5b7ce2922301",
+  "lastOpenFiles": [
+    "format string bug.md",
+    "tiny.md",
+    "Pasted image 20231109134533.png",
+    "Pasted image 20231109102834.png",
+    "Pasted image 20231108192548.png",
+    "Pasted image 20231107201233.png",
+    "Pasted image 20231107200734.png",
+    "Pasted image 20231107104637.png",
+    "Pasted image 20231107104613.png",
+    "Untitled.canvas",
+    "2023-11-07.md"
+  ]
+}
