@@ -11,11 +11,9 @@
             "id": "2bce5b7ce2922301",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "tiny.md",
-                "mode": "source",
-                "source": false
+                "file": "20231109134533.png"
               }
             }
           }
@@ -85,7 +83,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "tiny.md",
+                "file": "20231109134533.png",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +100,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "tiny.md",
+                "file": "20231109134533.png",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +123,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "tiny.md"
+                "file": "20231109134533.png"
               }
             }
           }
@@ -146,15 +144,15 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "2bce5b7ce2922301",
+  "active": "cc4d8b3ad6291f1b",
   "lastOpenFiles": [
-    "format string bug.md",
+    "20231109102834.png",
+    "1.png",
     "tiny.md",
-    "Pasted image 20231109134533.png",
-    "Pasted image 20231109102834.png",
-    "Pasted image 20231108192548.png",
-    "Pasted image 20231107201233.png",
-    "Pasted image 20231107200734.png",
+    "format string bug.md",
+    "20231109134533.png",
+    "20231108192548.png",
+    "20231107201233.png",
     "Pasted image 20231107104637.png",
     "Pasted image 20231107104613.png",
     "Untitled.canvas",

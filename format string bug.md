@@ -126,7 +126,7 @@ another thing is I know I need to use 4 loops of format strings for writing to t
 	what if the key value contains a null byte? we will run the program again :)
 	
 * using what we have on the stack
-	given ![[Pasted image 20231107201233.png]]
+	given ![[20231107201233.png]]
 	we can use the format strings to write to addresses on the stack say sleep's GOT address (`0x8048400`)
 	then overwriting it's value (%n) with the code that pops a shell at `0x804869f`
 	**Problem**
@@ -149,9 +149,9 @@ Direction
 	3. we guess the key - no way (I cannot read / write it  / deduct it from `alloca`) what if I changed read to read to the key's address? too late..
 
 what do I have on the stack?
-![[Pasted image 20231107200734.png]]
+![[1.png]]
 that's all
-![[Pasted image 20231107201233.png]]
+![[20231107201233.png]]
 that's two addresses on the stack just after the RA to the main.
 can I use them? they are `ebp+0x8` and `ebp+0xc` they are the `argv` and `environment` variables passed to `fsb`. this is not useable ...
 
@@ -182,7 +182,7 @@ each iteration I can write values starting at `0`  each write we write a 4 byte 
 each iteration I could use the output of the previous iteration (but that you could do with one format string) can I?.
 
 wait what is that?
-![[Pasted image 20231108192548.png]]
+![[20231108192548.png]]
 why did they used a global var to store the data? it's not a protection from `fsb` ?
 
 There is a simpler solution then writing to the GOT.
@@ -203,9 +203,9 @@ inside the same `printf` the stack doesn't change...
 ```text
 [%20$s]           end
 ```
-![[Pasted image 20231109102834.png]]
+![[20231109102834.png]]
 maybe on the remote machine this will work, this was a bug from the `pwntools` lib everything OK now.
-![[Pasted image 20231109134533.png]]
+![[20231109134533.png]]
 but this is problematic, this is not a bug on my machine. it's a bug I can exploit? nope...
 fuck.
 
