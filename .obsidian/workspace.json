@@ -4,20 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "445004c23b5f7726",
+        "id": "9a32ab96b69fece7",
         "type": "tabs",
         "children": [
           {
-            "id": "2bce5b7ce2922301",
+            "id": "d66a1ab08aa270aa",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "20231109134533.png"
+                "file": "ascii.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "8a85fa479c28869d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "fix.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -67,7 +82,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "0c233113314a76dd",
@@ -83,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "20231109134533.png",
+                "file": "fix.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +116,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "20231109134533.png",
+                "file": "fix.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -123,7 +139,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "20231109134533.png"
+                "file": "fix.md"
               }
             }
           }
@@ -144,17 +160,22 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "cc4d8b3ad6291f1b",
+  "active": "8a85fa479c28869d",
   "lastOpenFiles": [
-    "20231109102834.png",
-    "1.png",
+    "ascii.md",
+    "fix.md",
+    "Pasted image 20231115114350.png",
+    "Pasted image 20231114100744.png",
+    "Pasted image 20231114093158.png",
+    "Pasted image 20231113161407.png",
     "tiny.md",
+    "Pasted image 20231110170631.png",
     "format string bug.md",
     "20231109134533.png",
+    "20231109102834.png",
+    "1.png",
     "20231108192548.png",
     "20231107201233.png",
-    "Pasted image 20231107104637.png",
-    "Pasted image 20231107104613.png",
     "Untitled.canvas",
     "2023-11-07.md"
   ]
