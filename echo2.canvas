@@ -1,0 +1,13 @@
+{
+	"nodes":[
+		{"id":"3612cca6b51566e3","x":-760,"y":-300,"width":980,"height":980,"type":"text","text":"# understanding the challenge\n\nthis time we have FSB and UAF on port 9011 :)\n\n## echo2\nwe get an input with `fgets` (no BOF). And then we print it as a format :)\nmoreover the format is on the stack so we have a primitive write to any address.\n### echo3\nwe malloc an object of size 32, Then we input to it 32 bytes then we puts it & free it.\n\nIn both functions we have the `greetings` and `byebye` calls\n\n### hints\n```bash\n[*] '/mnt/c/Users/reemp/Desktop/not-giving-a-fuck/echo2/echo2'\n    Arch:     amd64-64-little\n    RELRO:    Partial RELRO\n    Stack:    No canary found\n    NX:       NX unknown - GNU_STACK missing\n    PIE:      No PIE (0x400000)\n    Stack:    Executable\n    RWX:      Has RWX segments\n```\nwe can execute on the stack, heap, bss."},
+		{"id":"9331a6192f3a4c4f","x":640,"y":162,"width":640,"height":518,"type":"text","text":"# write primitive \n\ninteresting addresses\n* the global o pointer\n* the GOT\n"},
+		{"id":"a2b1cd47b43dc835","x":280,"y":940,"width":760,"height":360,"type":"text","text":"# overwriting the GOT\n\n* change `puts` to run any function a simple code redirection\n* change `printf`  to `system` and input `/bin/sh`"},
+		{"id":"d814b1d995de7d6e","x":-1220,"y":900,"width":635,"height":333,"type":"text","text":"# overwrite `o`\nwhen getting the malloced object you get the freed `o` object which you can overwrite 32 bytes of it :)."}
+	],
+	"edges":[
+		{"id":"9ee174ac76a6a973","fromNode":"3612cca6b51566e3","fromSide":"right","toNode":"9331a6192f3a4c4f","toSide":"left"},
+		{"id":"0fbf31c0a776f80e","fromNode":"9331a6192f3a4c4f","fromSide":"bottom","toNode":"a2b1cd47b43dc835","toSide":"top"},
+		{"id":"4eef827bdf625599","fromNode":"3612cca6b51566e3","fromSide":"left","toNode":"d814b1d995de7d6e","toSide":"top"}
+	]
+}
