@@ -1,27 +1,32 @@
 
+### work values
+* breaks with self-awareness questions
+* my lessons 
+* order in my notes
+* using my brain to calculate stuff
+    * remember numbers, spelling and terminology
+    * calculate what you can (offset in `alloca`)
+* stubbornness
+    * detect work loops and try a new perspective
+* the challenge itself
+
 ### finding directions / ideas
-* ask yourself what do you want, and what do you need?
-* sum the hints to give you the most probable direction
-* what do I have? and how can I use it with my ability?
-* what my ability gives me? (list all different stuff - say jumps to different locations in memory)
+**All directions are valid**, even if they doesn't add up. **Try** to validate the most easy ones first.
+<sup> stack spraying in `alloca` with sleep! and `dragon` with 127 as the upper boundary.</sup>
+* what do you want & **need**? with no restriction how could you get it?
+* sum the hints & abilities to give you the most probable direction
 
 ### Work flow
 1. understand the challenge
-	**focus on the relative content (rev)**, and run & debug, read about tech in it
+	**focus on the relative content (rev)**, read about tech in it
 2. find hints and sum them to theories
-	(internet, tools, description) **redefine your ability (`gdb`) and what works**
-3. define the most general problem and it's causes (`fix`). 
-4. list ideas to solve it (**priority**)
-	sometimes changing the problem it self is the solution
-5. go through the ideas in priority of their likelihood.
-6. if the direction seems too complicated or impossible *move* to another idea. and **sort** the list. otherwise go to step 2.
+	(internet, tools, description)
+3. sort & define **all** of your abilities (different types of input), **test them `remotely` and locally**
+     * first try to work with the ability without understanding it. if there is no escape, understand the black box.
+    * define the problem and it's causes (`fix`). 
+
 
 ### learning
 1. go through writeups
 2. write the *right* thinking flow & write conclusions
-
-### General tips
-* to warm up your brain, try to challenge it in the challenge.
-	* remember numbers, spelling and terminology
-* detect work loops, and take a rest, ask yourself how do you feel?
-* take constant breaks.
+3. what did I spend the most time on?

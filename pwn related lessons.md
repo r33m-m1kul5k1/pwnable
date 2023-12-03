@@ -29,3 +29,15 @@ process(["\x11\x11\x88\xff"],executable="./tiny_easy",env=dic)
 
 man just run the dam program... remotely!
 
+### `fsb`
+I know that a can pad characters `%[param_on_stack_index]$[pad]x` (or you could just `$[pad]x`)
+and with `%[param_on_stack_index]$n` I can write to `param_on_stack` value.
+
+
+### `dragon`
+defining structs in `ida` can help :) 
+
+### `alloca`
+I could use `str(numpy.int32(0xffb45000))` to convert to a sign integer.
+
+when brute forcing ASLR I don't  need to check if the process `segfault` I can continue running in loop with `interactive`. 
