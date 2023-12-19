@@ -4,16 +4,28 @@
     "type": "split",
     "children": [
       {
-        "id": "57750404c558febd",
+        "id": "dfebabcfc94415fc",
         "type": "tabs",
         "children": [
           {
-            "id": "477d24594d467d1f",
+            "id": "310f413b169a5cf6",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "techniques.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "57f434a4d6574e8b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "pwn related lessons.md",
                 "mode": "source",
                 "source": false
               }
@@ -145,30 +157,35 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "477d24594d467d1f",
+  "active": "310f413b169a5cf6",
   "lastOpenFiles": [
-    "alloca.canvas",
+    "crypto1.md",
     "techniques.md",
     "pwn related lessons.md",
-    "tiny.md",
-    "Pasted image 20231201153725.png",
-    "echo2.canvas",
-    "dragon.canvas",
-    "Pasted image 20231128095249.png",
-    "Pasted image 20231126175135.png",
-    "love letter.canvas",
-    "Pasted image 20231125150955.png",
-    "Pasted image 20231125150915.png",
-    "Pasted image 20231125144136.png",
-    "Pasted image 20231125143852.png",
-    "Pasted image 20231125143818.png",
+    "().md",
+    "Pasted image 20231215115320.png",
+    "Pasted image 20231215114459.png",
+    "Pasted image 20231215114419.png",
+    "Pasted image 20231215113224.png",
+    "otp.canvas",
     "simple login.canvas",
+    "Untitled.canvas",
+    "Pasted image 20231211095045.png",
+    "Pasted image 20231211094806.png",
     "echo.md",
-    "Pasted image 20231123122055.png",
-    "Pasted image 20231123122035.png",
-    "format string bug.md",
-    "ascii.md",
     "fix.md",
+    "echo2.canvas",
+    "ascii.md",
+    "alloca.canvas",
+    "1.png",
+    "tiny.md",
+    "love letter.canvas",
+    "dragon.canvas",
+    "format string bug.md",
+    "Pasted image 20231204143835.md",
+    "Pasted image 20231204143835.png",
+    "Pasted image 20231204144058.png",
+    "Pasted image 20231204135557.png",
     "2023-11-22.md",
     "Untitled 1.canvas",
     "2023-11-07.md"

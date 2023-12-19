@@ -21,9 +21,14 @@
 	**focus on the relative content (rev)**, read about tech in it
 2. find hints and sum them to theories
 	(internet, tools, description)
-3. sort & define **all** of your abilities (different types of input), **test them `remotely` and locally**
-     * first try to work with the ability without understanding it. if there is no escape, understand the black box.
-    * define the problem and it's causes (`fix`). 
+3. define your vulnerabilities (`otp`) - reading the code (`otp`) / checking input points (`dragon`)
+    * a vulnerability can be merely an unchecked condition (`otp fread fwrite fclose`).
+4. sort & define **all** of your abilities (different types of input), **test them `remotely` and locally**
+    * first try to work with the ability without understanding it. if there is no escape, understand the black box.
+    * define the problem and it's causes (`fix`, `otp - traping the signal`). 
+        * Check **why** the problem happens (`crypto1`).
+5. implement the exploit in parts and test each. 
+    For testing the concept you can use constant values for a specific case.
 
 
 ### learning
