@@ -45,3 +45,13 @@ when brute forcing ASLR I don't  need to check if the process `segfault` I can c
 ```
 (?<=S)(.*?)(?=E)
 ```
+
+### `brainfuck`
+patchelf, pwninit, bowkin
+
+https://libc.blukat.me/?q=__libc_start_main_ret%3Ae81%2C_IO_2_1_stdin_%3A5c0
+
+```
+readelf -s /lib32/libc.so.6 | grep system
+strings -a -t x /lib32/libc.so.6 | grep /bin/sh
+```

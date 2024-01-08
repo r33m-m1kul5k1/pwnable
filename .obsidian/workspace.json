@@ -20,18 +20,31 @@
             }
           },
           {
-            "id": "57f434a4d6574e8b",
+            "id": "d693ce41adfa0171",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "pwn related lessons.md",
+                "file": "syscall.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "3be3a8ab0cca0b1d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "kernel.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -98,7 +111,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "techniques.md",
+                "file": "kernel.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -115,7 +128,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "techniques.md",
+                "file": "kernel.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -138,7 +151,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "techniques.md"
+                "file": "kernel.md"
               }
             }
           }
@@ -157,35 +170,39 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "310f413b169a5cf6",
+  "active": "3be3a8ab0cca0b1d",
   "lastOpenFiles": [
-    "crypto1.md",
+    "syscall.md",
+    "kernel.md",
     "techniques.md",
     "pwn related lessons.md",
+    "MD5 calculator.md",
+    "brain fuck.md",
+    "format string bug.md",
+    "echo.md",
+    "echo2.canvas",
+    "ascii.md",
+    "tiny.md",
+    "simple login.canvas",
+    "fix.md",
+    "Pasted image 20231224172410.png",
+    "Pasted image 20231224164741.png",
+    "crypto1.md",
     "().md",
     "Pasted image 20231215115320.png",
     "Pasted image 20231215114459.png",
     "Pasted image 20231215114419.png",
     "Pasted image 20231215113224.png",
     "otp.canvas",
-    "simple login.canvas",
     "Untitled.canvas",
     "Pasted image 20231211095045.png",
     "Pasted image 20231211094806.png",
-    "echo.md",
-    "fix.md",
-    "echo2.canvas",
-    "ascii.md",
     "alloca.canvas",
     "1.png",
-    "tiny.md",
     "love letter.canvas",
     "dragon.canvas",
-    "format string bug.md",
     "Pasted image 20231204143835.md",
     "Pasted image 20231204143835.png",
-    "Pasted image 20231204144058.png",
-    "Pasted image 20231204135557.png",
     "2023-11-22.md",
     "Untitled 1.canvas",
     "2023-11-07.md"

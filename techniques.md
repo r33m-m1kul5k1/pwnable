@@ -25,10 +25,12 @@
     * a vulnerability can be merely an unchecked condition (`otp fread fwrite fclose`).
 4. sort & define **all** of your abilities (different types of input), **test them `remotely` and locally**
     * first try to work with the ability without understanding it. if there is no escape, understand the black box.
-    * define the problem and it's causes (`fix`, `otp - traping the signal`). 
-        * Check **why** the problem happens (`crypto1`).
-5. implement the exploit in parts and test each. 
-    For testing the concept you can use constant values for a specific case.
+5. analyze in depth an idea, **run wild** with your ideas (`brainfuck`)
+6. define the problem and it's causes (`fix`, `otp - traping the signal`). 
+    * **Check** why the problem happens (`crypto1`).
+    * take a minute to find other solutions. (`brainfuck`)
+7. implement the exploit in parts and `test` each. 
+    For testing the concept you can use constant values for a specific case. `crypto1`
 
 
 ### learning
