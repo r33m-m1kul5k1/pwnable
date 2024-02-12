@@ -34,6 +34,6 @@
 
 
 ### learning
-1. go through writeups
+1. go through write-ups
 2. write the *right* thinking flow & write conclusions
 3. what did I spend the most time on?
