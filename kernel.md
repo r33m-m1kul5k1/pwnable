@@ -144,3 +144,5 @@ gcc -Wl,--section-start=.text=0x1030110 sol.c -o sol
 
 technique
 https://github.com/smallkirby/kernelpwn/tree/master/technique
+
+

