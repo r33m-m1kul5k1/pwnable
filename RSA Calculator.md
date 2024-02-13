@@ -54,3 +54,13 @@ using the encryption function and passing to it more data then allocated (more t
     RWX:      Has RWX segments
 ```
 canary with stack is executable, and no PIE, 64 bit AMD (x86_64), little endian
+
+### main
+we get a function array each 8 bytes the first function is `set_key` and in the eighth location we got `system`.
+the problem is that
+```asm
+ADD        EAX,0x1
+CMP        EAX,0x6
+JBE        IS_VALID_CHOICE # jumps below or equal (unsigned values)
+```
+if we enter 0 we should pass the check but we will access `-1*8 + func` if we enter -1 we will access `func + -2*8`
