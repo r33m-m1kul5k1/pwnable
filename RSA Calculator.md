@@ -64,3 +64,13 @@ CMP        EAX,0x6
 JBE        IS_VALID_CHOICE # jumps below or equal (unsigned values)
 ```
 if we enter 0 we should pass the check but we will access `-1*8 + func` if we enter -1 we will access `func + -2*8`
+
+`g_pbuf` is 1024 bytes (plain text buff)
+`g_ebuf` is 1024 bytes (encrypted buff) 
+
+## goal
+call `func + 7*8` (system) with `/bin/sh` as an argument (`rdi`)
+## vulnerabilities
+* each text byte after encryption is 4 cipher bytes, and because `g_ebuf` is 1024 we can overflow the `bss`. (max of 4096)
+* each byte in the `g_ebuf` is 2 chars inside the printed cipher which is only 512 bytes long (so we can write max of 8192 bytes into the local buffer)
+* I can execute `func - 8` (0) or `func - 16` (-1). which is just above `g_ebuf` ;)
