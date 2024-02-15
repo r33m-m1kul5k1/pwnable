@@ -72,5 +72,51 @@ if we enter 0 we should pass the check but we will access `-1*8 + func` if we en
 call `func + 7*8` (system) with `/bin/sh` as an argument (`rdi`)
 ## vulnerabilities
 * each text byte after encryption is 4 cipher bytes, and because `g_ebuf` is 1024 we can overflow the `bss`. (max of 4096)
-* each byte in the `g_ebuf` is 2 chars inside the printed cipher which is only 512 bytes long (so we can write max of 8192 bytes into the local buffer)
+* each byte in the `g_ebuf` is 2 chars inside the printed cipher which is only 512 bytes long (so we can write max of 8192 bytes into the local buffer) (`buff_i = 1024, buff_i*4 = 4096 -> 2 char per byte (8192)`)
 * I can execute `func - 8` (0) or `func - 16` (-1). which is just above `g_ebuf` ;)
+
+## GDB
+
+```text
+b *0x00400e9c - after copying the input to the global plaintext buffer
+b *0x00400f0d - after stored the encrypted text inside `g_ebuf`
+0x00602560 - g_pbuf 
+0x006020e0 - g_ebuf
+```
+
+## analyzing vulnerabilities
+when entered a buffer of 1024 I got the buffer in an offset of 3392. The encrypted bytes are 4 bytes of `0x0000000c`  (if we stopped before the encryption we get it without the offset, and if we don't have an overflow it doesn't get fucked)
+
+If we give it `e` and `d` of 1 we get no encryption! the only problem is that we convert one byte to 4.
+If I would create a huge N (larger then 2^32) the encryption is basically `m^ed = c`  so I need a byte (m) that when raised to `ed` gives me the needed address.
+```
+-SET RSA KEY-
+p : 1000000
+q : 1000000 
+p, q, set to 16960, 16960
+-current private key and public keys-
+public key : 00 00 00 00 00 00 00 00 
+public key : 00 00 00 00 00 00 00 00 
+N set to 287641600, PHI set to 287607681
+set public key exponent e : 1
+set private key exponent d : 1
+key set ok
+pubkey(e,n) : (1(00000001), 287641600(11251000))
+prikey(d,n) : (1(00000001), 287641600(11251000))
+```
+
+```
+SET RSA KEY-
+p : 100000
+q : 100000
+p, q, set to -31072, -31072
+-current private key and public keys-
+public key : 00 00 00 00 00 00 00 00 
+public key : 00 00 00 00 00 00 00 00 
+N set to 965469184, PHI set to 965531329
+set public key exponent e : 1
+set private key exponent d : 1
+key set ok
+pubkey(e,n) : (1(00000001), 965469184(398be400))
+prikey(d,n) : (1(00000001), 965469184(398be400))
+```
