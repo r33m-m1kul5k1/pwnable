@@ -80,8 +80,9 @@ call `func + 7*8` (system) with `/bin/sh` as an argument (`rdi`)
 ```text
 b *0x00400e9c - after copying the input to the global plaintext buffer
 b *0x00400f0d - after stored the encrypted text inside `g_ebuf`
-0x00602560 - g_pbuf 
-0x006020e0 - g_ebuf
+0x6020e0 - g_ebuf
+0x602500 - func
+0x602560 - g_pbuf 
 ```
 
 ## analyzing vulnerabilities
@@ -120,3 +121,74 @@ key set ok
 pubkey(e,n) : (1(00000001), 965469184(398be400))
 prikey(d,n) : (1(00000001), 965469184(398be400))
 ```
+
+### exploit
+* overflow `func` with the `g_ebuf` (1056 bytes so (264 plain-text bytes)) change it to point to the start of `g_pbuf` -> `0x602500`
+* set `g_pbuf` start to a `shellcode` - (`mov rdi, /bin/sh location (say the end of g_pbuf), call func + 8*8`)
+
+##### Note
+the two 8 bytes before `system` are garbage...
+
+## The algorithmic problem
+I have one by that I need to convert to 3 bytes. a number `0x0-0xff` -> `0x602500`
+```
+In [21]: (0x602500)**(1/3)
+Out[21]: 184.70054304869913
+
+In [14]: (0x602500)**(1/4)
+Out[14]: 50.10154623182822
+
+In [11]: (0x602500)**(1/5)
+Out[11]: 22.902395141442064
+
+```
+
+a function that is most close to a root of a number
+`f = (0x602500)**(1/x) - (0x602500)**(1/x)(int)
+
+Say x % y = z, if y is bigger than x, z = x... so I need N to be bigger then m^e, easy. Or I can use the modulo to create the number I need (`0x602500`) 
+
+`42**5 % (42**5 - 0x602500) = 0x602500` using the idea that if we get a number `A % A-target = target`  if `A-target > target`
+`m^e  %  n                  = 0x602500`
+So If I would choose a good `n` I would get the number I want
+
+
+`n = pq == 42**(e) - 0x602500`
+`ed % (p - 1)(q - 1) = 1`
+
+`e = 5 => pq = 42**5 - 0x602500 = 124390304
+so `p = 32, q = 3887197`
+
+by calculating d we got = `96402461`
+
+```
+-SET RSA KEY-
+p : 32
+q : 3887197
+p, q, set to 32, 20573
+-current private key and public keys-
+public key : 00 00 00 00 00 00 00 00 
+public key : 00 00 00 00 00 00 00 00 
+N set to 658336, PHI set to 637732
+set public key exponent e : 5
+set private key exponent d : 96402461
+key set ok
+pubkey(e,n) : (5(00000005), 658336(000a0ba0))
+prikey(d,n) : (96402461(05befc1d), 658336(000a0ba0))
+
+- select menu -
+- 1. : set key pair
+- 2. : encrypt
+- 3. : decrypt
+- 4. : help
+- 5. : exit
+> 2
+how long is your data?(max=1024) : 10
+paste your plain text data
+*****
+-encrypted result (hex encoded) -
+e0320500e0320500e0320500e0320500e0320500
+```
+
+`e0320500` because `p*q` is not 124390304 its 658336 :(
+I need a smaller m that `m^5 - 0x602500 > 0x602500`
