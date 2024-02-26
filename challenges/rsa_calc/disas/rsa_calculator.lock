@@ -1,0 +1,9 @@
+#Ghidra Lock File
+#Mon Feb 26 09:53:22 EET 2024
+OS\ Name=Linux
+OS\ Version=6.5.0-18-generic
+Username=mafat
+Hostname=mafat-Z690-UD-DDR4
+<META>\ Supports\ File\ Channel\ Locking=Channel Lock
+OS\ Architecture=amd64
+Timestamp=2/26/24, 9\:53 AM

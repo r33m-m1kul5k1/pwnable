@@ -80,6 +80,8 @@ call `func + 7*8` (system) with `/bin/sh` as an argument (`rdi`)
 ```text
 b *0x00400e9c - after copying the input to the global plaintext buffer
 b *0x00400f0d - after stored the encrypted text inside `g_ebuf`
+b *0x00400b04 - after inputting p & q
+b *0x00400bce - before calculating N 
 0x6020e0 - g_ebuf
 0x602500 - func
 0x602560 - g_pbuf 
@@ -192,3 +194,32 @@ e0320500e0320500e0320500e0320500e0320500
 
 `e0320500` because `p*q` is not 124390304 its 658336 :(
 I need a smaller m that `m^5 - 0x602500 > 0x602500`
+
+I checked and `2**8 & 3887197` are the prime factorization of 124390304. And I double checked it and 3887197 is prime
+```python
+def is_prime(n: int):
+    for i in range(2, math.floor(math.sqrt(n))+1):
+        if n % i == 0:
+            return False
+    return True
+
+def prime_factors(n):
+     i = 2
+     factors = []
+     while i * i <= n:
+         if n % i:
+             i += 1
+         else:
+             n //= i
+             factors.append(i)
+     if n > 1:
+         factors.append(n)
+     return factors
+```
+
+### analyzing `set_key` input
+p & q are short (2 bytes), but we input to them an integer...
+n = `p*q` sign multiplication, and it's an integer so max value is 2^31 - 1, that's valid because 124390304 is approximately 2^27.
+the problem is that p & q are only 2 bytes long and sign, that's the max value 2^15 - 1 = 32767 we can get with those numbers to a number bigger than 124390304
+but not exactly to it.. I need a better offset...
+
