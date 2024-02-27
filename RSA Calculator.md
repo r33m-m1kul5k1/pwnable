@@ -82,6 +82,7 @@ b *0x00400e9c - after copying the input to the global plaintext buffer
 b *0x00400f0d - after stored the encrypted text inside `g_ebuf`
 b *0x00400b04 - after inputting p & q
 b *0x00400bce - before calculating N 
+b *0x00401408 - calling the handler function in main
 0x6020e0 - g_ebuf
 0x602500 - func
 0x602560 - g_pbuf 
@@ -222,4 +223,61 @@ p & q are short (2 bytes), but we input to them an integer...
 n = `p*q` sign multiplication, and it's an integer so max value is 2^31 - 1, that's valid because 124390304 is approximately 2^27.
 the problem is that p & q are only 2 bytes long and sign, that's the max value 2^15 - 1 = 32767 we can get with those numbers to a number bigger than 124390304
 but not exactly to it.. I need a better offset...
+or a better number to get to:
 
+`e = 5 => pq = 40**5 - 0x602500 = 96099072`
+
+```python
+In [14]: prime_factors(96099072)
+Out[14]: [2, 2, 2, 2, 2, 2, 2, 2, 3, 157, 797]
+In [13]: 797*3*2*2
+Out[13]: 9564
+In [16]: 2*2*2*2*2*2*157
+Out[16]: 10048
+```
+p = 9564
+q = 10048
+e = 5
+m = 40  => `(`
+
+```
+- select menu -
+- 1. : set key pair
+- 2. : encrypt
+- 3. : decrypt
+- 4. : help
+- 5. : exit
+> 1
+-SET RSA KEY-
+p : 9564
+q : 10048
+p, q, set to 9564, 10048
+-current private key and public keys-
+public key : 00 00 00 00 00 00 00 00 
+public key : 00 00 00 00 00 00 00 00 
+N set to 96099072, PHI set to 96079461
+set public key exponent e : 5
+set private key exponent d : 76863569
+key set ok
+pubkey(e,n) : (5(00000005), 96099072(05ba5b00))
+prikey(d,n) : (76863569(0494d851), 96099072(05ba5b00))
+
+- select menu -
+- 1. : set key pair
+- 2. : encrypt
+- 3. : decrypt
+- 4. : help
+- 5. : exit
+> 2
+how long is your data?(max=1024) : 10
+paste your plain text data
+((((((((((
+-encrypted result (hex encoded) -
+0025600000256000002560000025600000256000002560000025600000256000002560000025600
+```
+we got it  :)
+
+now it's time to check the exploit:
+give it a buffer of 264 bytes where the last character is (
+
+I need `0x602560` so n = 96098976 if m is 40.
