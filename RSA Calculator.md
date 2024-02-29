@@ -281,3 +281,10 @@ now it's time to check the exploit:
 give it a buffer of 264 bytes where the last character is (
 
 I need `0x602560` so n = 96098976 if m is 40.
+
+I checked and the `bss` isn't executable, remotely and locally... Now the `system` address makes sense.
+
+## The new exploit
+* I can jump to the stack to the location of my `shellcode`...
+* in main after 
+* 
